@@ -21,13 +21,13 @@ IPTV_IMPROXY_DEBUG="false"
 # Name of the IPTV VLAN interface (default : iptv)
 IPTV_WAN_VLAN_INTERFACE="iptv"
 
-# Orange France specific configuration :
+# Orange Poland specific configuration :
 # ID of VLAN which carries IPTV traffic
-IPTV_WAN_VLAN="840"
+IPTV_WAN_VLAN="839"
 # Static IP for IPTV WAN interface
 IPTV_WAN_STATIC_IP="192.168.255.254/24"
 # IPTV VLAN interface egress-qos
-IPTV_WAN_VLAN_INTERFACE_EGRESS_QOS="0:5 1:5 2:5 3:5 4:5 5:5 6:5 7:5"
+IPTV_WAN_VLAN_INTERFACE_EGRESS_QOS="0:4 1:4 2:4 3:4 4:4 5:4 6:4 7:4"
 
 ###
 
