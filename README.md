@@ -44,7 +44,7 @@ Na bramie pobierz repozytorium do katalogu /data/orange-iptv
 
 ```bash
 cd /data
-curl -sL https://github.com/jbbodart/orange-iptv/archive/refs/tags/v0.2.tar.gz | tar -xvz
+curl -sL https://github.com/slavickox/orange-polska-iptv-unifi/archive/refs/tags/v1.0.tar.gz | tar -xvz
 mv orange-iptv-0.2 orange-iptv
 ```
 
