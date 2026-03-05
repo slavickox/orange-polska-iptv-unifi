@@ -1,54 +1,46 @@
-# La TV d'Orange France sur UniFiOS
+# Orange TV (Polska) na UniFiOS
 
-Ces scripts permettent de configurer la TV d'Orange en France pour les clients ayant remplacé leur livebox par une gateway Unifi basée sur UnifiOS (Cloud Gateways (UCG-XX), Gateways (UXG-XX), Dream routers (UDM-XX), etc...).
+Ten skrypty umożliwiają skonfigurowanie usługi Orange TV w Polsce dla klientów, którzy zastąpili swojego Funboxa bramą UniFi opartą na UniFiOS (Cloud Gateways (UCG-XX), Gateways (UXG-XX), Dream Routers (UDM-XX) itd.).
 
-Comme il est actuellement impossible de configurer via la GUI Unifi une interface WAN avec plusieurs VLAN, le script se charge de créer la nouvelle interface et de lancer le proxy IGMP afin de relayer les flux IPTV.
+Ponieważ obecnie nie ma możliwości skonfigurowania w GUI UniFi interfejsu WAN z wieloma VLAN-ami, skrypt tworzy nowy interfejs oraz uruchamia proxy IGMP w celu przekazywania strumieni IPTV
 
-Ces scripts sont basés sur le travail de Fabian Mastenbroek (https://github.com/fabianishere/udm-iptv).
+Skrypty bazują na pracy Fabian Mastenbroek: https://github.com/fabianishere/udm-iptv
 
-Testé sur Unifi Gateway Max v4.1.13 / Unifi Network v9.4.19, avec décodeur Orange UHD ou TV6.
+Testowane na:
 
-# Prérequis
+UniFi Gateway Fiber v5.0.12
 
-1. Une connexion internet Orange fonctionnelle
+UniFi Network v10.1.85
 
-⚠️ *Attention* : sur le controlleur, dans les paramètres du WAN, la case IGMP Proxy doit être **décochée** (pour éviter les conflits au lancement du proxy IGMP par le script)
+dekoder Orange 4K
 
-2. (conseillé mais non obligatoire) Un VLAN dédié pour la TV dans votre réseau local.
+# Wymagania
 
-Cela permet d'appliquer la configuration particulière nécessaire au fonctionnement de la TV uniquement à votre décodeur TV (DNS, options DHCP...).
+1. Działające połączenie internetowe Orange
 
-3. Configuration sur la GUI
+Uwaga: w kontrolerze, w ustawieniach WAN, opcja IGMP Proxy musi być odznaczona (aby uniknąć konfliktów przy uruchamianiu proxy IGMP przez skrypt).
 
-Dans le réseau sur lequel le décodeur TV est connecté, configurez les valeurs suivantes :
+2. (Zalecane, ale nieobowiązkowe) Dedykowany VLAN dla TV w sieci lokalnej
 
-* DHCP activé
-* DNS Server : configurez uniquement les DNS d'Orange : `80.10.246.136` et `81.253.149.6`
+Pozwala to zastosować specjalną konfigurację wymaganą do działania TV wyłącznie dla dekodera (DNS itd.).
+
+3. Konfiguracja w GUI
+
+W sieci, do której podłączony jest dekoder TV, ustaw następujące wartości:
+
+DHCP: włączone
+
+DNS Server: ustaw wyłącznie serwery DNS Orange: `194.204.152.34` i `194.204.159.1`
 
 Exemple :
 
 ![Screenshot GUI](https://raw.githubusercontent.com/jbbodart/orange-iptv/refs/heads/main/img/Configuration%20r%C3%A9seau.png)
+ 
+# Instalacja
 
-* Custom DHCP Options : Ajouter une option "vendor spécific" (code 125) avec une chaine hexadécimale de la forme :
-
-`00:00:0d:e9:24:04:06:YY:YY:YY:YY:YY:YY:05:0f:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:06:09:4c:69:76:65:62:6f:78:20:VV`
-
-Avec :
-* `YY:YY:YY:YY:YY:YY` : 3 premiers octets de l'adresse MAC de la livebox en hexa
-* `XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX` : le numéro de série de livebox codé en hexa.
-* `VV` : version LIVEBOX codée en hexa (33 = V3, 34 = V4, etc.)
-
-Un script existe pour générer cette chaine hexa : https://lafibre.info/remplacer-livebox/le-guide-complet-pour-usgusg-pro-internet-tv-livebox-ipv6/msg608516/#msg608516
-
-![Screenshot GUI](https://raw.githubusercontent.com/jbbodart/orange-iptv/refs/heads/main/img/Configuration%20Option%20DHCP%202.jpg)
-
-Une fois cette configuration réalisée, le décodeur TV devrait pouvoir démarrer sans erreur (mais la TV live toujours inacessible).
-
-# Installation
-
-Il est nécessaire d'avoir un accès SSH sur la gateway.
-
-Sur la gateway, télécharger ce repository dans le répertoire `/data/orange-iptv` (le contenu de `/data` est conservé lors des reboots et des upgrades firmwares) :
+Wymagany jest dostęp SSH do bramy.
+Na bramie pobierz repozytorium do katalogu /data/orange-iptv
+(zawartość katalogu /data jest zachowywana po restartach i aktualizacjach firmware):
 
 ```bash
 cd /data
@@ -56,7 +48,7 @@ curl -sL https://github.com/jbbodart/orange-iptv/archive/refs/tags/v0.2.tar.gz |
 mv orange-iptv-0.2 orange-iptv
 ```
 
-Ouvrir le script `orange-iptvd`, et configurer les valeurs correspondant à votre installation, en particulier :
+Otwórz skrypt orange-iptvd i skonfiguruj wartości zgodnie ze swoją instalacją, w szczególności:
 
 ```
 # Interface on which IPTV traffic enters the router (configure according to your Unifi device)
@@ -65,28 +57,31 @@ IPTV_WAN_INTERFACE="eth4"
 IPTV_LAN_INTERFACES="br102"
 ```
 
-`IPTV_WAN_INTERFACE` : correspond à l'interface WAN de la gateway (par exemple `eth4` sur Gateway Max)
-`IPTV_LAN_INTERFACES` : contient la liste des interfaces du réseau local vers lesquelles le flux multicast doit être diffusé (ici br102 = interface correspondant au VLAN 102)
+IPTV_WAN_INTERFACE - interfejs WAN bramy (np. eth4 w Gateway Max)
 
-Une fois le script configuré, il ne reste qu'à l'installer :
+IPTV_LAN_INTERFACES - lista interfejsów sieci lokalnej, do których ma być rozgłaszany strumień multicast (np. br102 = VLAN 102)
+
+Po skonfigurowaniu skryptu zainstaluj go:
 
 ```bash
 cd /data/orange-iptv
 ./orange-iptv install
 ```
 
-# Verification
+# Weryfikacja
 
-Une fois le script lancé une nouvelle interface `iptv` devrait avoir été crée, avec les bons paramètres de QoS :
+Po uruchomieniu skryptu powinien zostać utworzony nowy interfejs iptv z odpowiednimi parametrami QoS:
+
 ```
 root@UXGMax:/data/orange-iptv# ip -d link show iptv
 XX: iptv@eth4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
     link/ether 9c:05:d6:d7:b6:eb brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 0 maxmtu 65535 
     vlan protocol 802.1Q id 840 <REORDER_HDR> 
-      egress-qos-map { 0:5 1:5 2:5 3:5 4:5 5:5 6:5 7:5 } addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
+      egress-qos-map { 0:4 1:4 2:4 3:4 4:4 5:4 6:4 7:4 } addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
 ```
 
-Et le proxy IGMP IMProxy devrait être lancé :
+Dodatkowo powinien być uruchomiony proxy IGMP (IMProxy):
+
 ```
 root@UXGMax:/data/orange-iptv# systemctl status orange-iptvd
 ● orange-iptvd.service - Orange IPTV support for UniFi
@@ -104,23 +99,30 @@ Sep 22 09:10:12 UXGMax orange-iptvd[7346]: Setting up IMProxy
 Sep 22 09:10:12 UXGMax orange-iptvd[7346]: Starting IMProxy
 ```
 
-La TV devrait maintenant être disponible sur le décodeur \o/.
+Jeśli usługa jest aktywna i działa, TV powinna być teraz dostępna na dekoderze.
 
-# Upgrade Firmware
+PS. Warto odłączyć dekoder z prądu i go spowrotem podłączyć dla totalnego restartu usługi lub zrobić to z ustawień dekodera(opcja 1 dla starych dekoderów opcja 2 dla nowszych z androidem)
 
-En cas d'upgrade, le script ne sera pas réinstallé automatiquement.
-Il est nécessaire de le réinstaller :
+# Aktualizacja firmware
+
+Po aktualizacji firmware skrypt nie zostanie zainstalowany automatycznie.
+
+Należy ponownie wykonać instalację:
+
 ```bash
 cd /data/orange-iptv
 ./orange-iptv install
 ```
 
-# Désinstallation
+# Odinstalowanie
 
-Pour supprimer toute trace du script :
+Aby całkowicie usunąć skrypt:
+
 ```bash
 cd /data/orange-iptv
 ./orange-iptv uninstall
 ```
 
-Puis supprimer le répertoire `/data/orange-iptv`
+Następnie usuń katalog:
+
+`/data/orange-iptv`
