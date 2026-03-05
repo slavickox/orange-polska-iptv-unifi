@@ -45,7 +45,7 @@ Na bramie pobierz repozytorium do katalogu /data/orange-iptv
 ```bash
 cd /data
 curl -sL https://github.com/slavickox/orange-polska-iptv-unifi/archive/refs/tags/v1.0.tar.gz | tar -xvz
-mv orange-iptv-0.2 orange-iptv
+mv orange-polska-iptv-unifi-1.0 orange-iptv
 ```
 
 Otwórz skrypt orange-iptvd i skonfiguruj wartości zgodnie ze swoją instalacją, w szczególności:
@@ -76,7 +76,7 @@ Po uruchomieniu skryptu powinien zostać utworzony nowy interfejs iptv z odpowie
 root@UXGMax:/data/orange-iptv# ip -d link show iptv
 XX: iptv@eth4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
     link/ether 9c:05:d6:d7:b6:eb brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 0 maxmtu 65535 
-    vlan protocol 802.1Q id 840 <REORDER_HDR> 
+    vlan protocol 802.1Q id 839 <REORDER_HDR> 
       egress-qos-map { 0:4 1:4 2:4 3:4 4:4 5:4 6:4 7:4 } addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
 ```
 
